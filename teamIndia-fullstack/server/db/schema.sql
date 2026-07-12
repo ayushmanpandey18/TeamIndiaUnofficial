@@ -125,6 +125,6 @@ INSERT INTO settings (key, value) VALUES
 ('hero_tagline', 'Mind Reading · Illusion · Wonder'),
 ('about_text', 'Suhani Shah is one of the biggest names in the magic industry with an experience of over 2 decades of performing over 5000 shows.'),
 ('contact_email', 'contact@suhanishah.com'),
-('youtube_url', 'https://youtube.com/@SuhaniShah'),
+('youtube_url', 'https://youtube.com/@icc'),
 ('instagram_url', 'https://instagram.com/thesuhanishah')
 ON CONFLICT (key) DO NOTHING;

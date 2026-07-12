@@ -6,7 +6,7 @@ const path = require('path');
 const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // ── Ensure uploads directory exists ──
 const uploadsDir = path.join(__dirname, '../public/images/uploads');
@@ -49,7 +49,7 @@ app.use((req, res) => {
 app.listen(PORT, () => {
   console.log(`
   ╔════════════════════════════════════╗
-  ║   🎩 Suhani Shah Website Running   ║
+  ║   🎩 Team India Website Running   ║
   ║   Frontend: http://localhost:${PORT}  ║
   ║   Admin:    http://localhost:${PORT}/admin ║
   ╚════════════════════════════════════╝
