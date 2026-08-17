@@ -45,8 +45,18 @@ app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+const pool = require('./db/db');
+
 // ── Start server ──
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+  try {
+    const schemaSql = fs.readFileSync(path.join(__dirname, 'db/schema.sql'), 'utf8');
+    await pool.query(schemaSql);
+    console.log('✅ Database schema and seed data initialized successfully');
+  } catch (err) {
+    console.error('⚠️ Schema init warning:', err.message);
+  }
+
   console.log(`
   ╔════════════════════════════════════╗
   ║   🎩 Team India Website Running   ║
