@@ -7,7 +7,7 @@
 ## 📁 Project Structure
 
 ```
-suhani-fullstack/
+teamIndia-fullstack/
 ├── server/
 │   ├── index.js              ← Main Express server
 │   ├── db/
@@ -43,9 +43,9 @@ Download from: https://postgresql.org/download
 During install, remember your **postgres password**
 
 ### Step 3 – Create Database
-Open pgAdmin or psql and run:
+For a new install, create a PostgreSQL database and set the same name as `DB_NAME` in `.env`.
 ```sql
-CREATE DATABASE suhani_website;
+CREATE DATABASE your_database_name;
 ```
 
 ### Step 4 – Setup .env file
@@ -57,7 +57,7 @@ SESSION_SECRET=any_random_long_string
 
 ### Step 5 – Setup Database Tables
 ```bash
-psql -U postgres -d suhani_website -f server/db/schema.sql
+psql -U postgres -d your_database_name -f server/db/schema.sql
 ```
 
 ### Step 6 – Install Dependencies

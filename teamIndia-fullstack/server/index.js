@@ -20,7 +20,8 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // ── Sessions ──
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'suhani_secret_key',
+  secret: process.env.SESSION_SECRET || 'team_india_dev_secret',
+    secret: process.env.SESSION_SECRET || 'team_india_dev_secret',
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours

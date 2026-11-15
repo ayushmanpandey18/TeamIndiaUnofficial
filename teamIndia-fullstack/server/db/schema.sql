@@ -1,11 +1,11 @@
 -- =============================================
--- Suhani Shah Website - PostgreSQL Database Schema
+-- Team India Website - PostgreSQL Database Schema
 -- Run this file once to setup your database
--- Command: psql -U postgres -d suhani_website -f server/db/schema.sql
+-- Command: psql -U postgres -d <DB_NAME> -f server/db/schema.sql
 -- =============================================
 
 -- Create Database (run separately if needed)
--- CREATE DATABASE suhani_website;
+-- CREATE DATABASE team_india;
 
 -- ── ADMIN USERS ──
 CREATE TABLE IF NOT EXISTS admins (
@@ -83,48 +83,45 @@ CREATE TABLE IF NOT EXISTS settings (
 
 -- ── SEED DATA ──
 
+-- Remove legacy entertainment-site seed data without affecting cricket content.
+DELETE FROM shows WHERE title IN (
+  'Spellbound – A Mentalism Special',
+  'Mindwaves Tour',
+  'Illusions Live'
+);
+DELETE FROM videos WHERE title IN (
+  'Kareena Kapoor SPOOKED!',
+  'Absolutely speechless!',
+  'Mentalist goes off script!',
+  'Hacking into phones?',
+  'Shared psychic connection?',
+  'Don''t hum the song!'
+);
+DELETE FROM news
+WHERE headline ILIKE '%Suhani%'
+   OR headline ILIKE '%mentalist%'
+   OR headline ILIKE '%magician%';
+DELETE FROM testimonials
+WHERE quote ILIKE '%spooky%'
+   OR quote ILIKE '%goosebumps%'
+   OR quote ILIKE '%Suhani%'
+   OR quote ILIKE '%touch your feet%'
+   OR quote ILIKE '%you inspire me%';
+
 -- Default admin (password: Admin@123)
 INSERT INTO admins (email, password_hash, name)
 VALUES ('admin@teamindia.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin')
 ON CONFLICT (email) DO NOTHING;
 
--- Sample Shows
-INSERT INTO shows (title, venue, city, show_date, show_time, ticket_url) VALUES
-('Spellbound – A Mentalism Special', 'The Habitat', 'Mumbai', '2026-04-22', '7:00 PM', 'https://in.bookmyshow.com'),
-('Mindwaves Tour', 'Kamani Auditorium', 'Delhi', '2026-05-10', '6:30 PM', 'https://in.bookmyshow.com'),
-('Illusions Live', 'Alliance Française', 'Bangalore', '2026-05-25', '7:30 PM', 'https://in.bookmyshow.com');
-
--- Sample Videos
-INSERT INTO videos (title, youtube_url, display_order) VALUES
-('Kareena Kapoor SPOOKED!', 'https://youtube.com/watch?v=example1', 1),
-('Absolutely speechless!', 'https://youtube.com/watch?v=example2', 2),
-('Mentalist goes off script!', 'https://youtube.com/watch?v=example3', 3),
-('Hacking into phones?', 'https://youtube.com/watch?v=example4', 4),
-('Shared psychic connection?', 'https://youtube.com/watch?v=example5', 5),
-('Don''t hum the song!', 'https://youtube.com/watch?v=example6', 6);
-
--- Sample News
-INSERT INTO news (source_name, headline, article_url) VALUES
-('The Guardian', 'Edinburgh''s superstar magicians on secrets and surprises', 'https://theguardian.com'),
-('DNA India', 'Meet Suhani Shah, the Jadu Pari stealing limelight', 'https://dnaindia.com'),
-('News 18', 'Suhani Shah announces Silver Jubilee India Tour', 'https://news18.com'),
-('Economic Times', 'What is a mentalist? Suhani Shah has the answers', 'https://economictimes.com'),
-('World Magic Review', 'Suhani Shah: Spellbound review', 'https://worldmagicreview.com');
-
--- Sample Testimonials
-INSERT INTO testimonials (quote, author_name, author_role, display_order) VALUES
-('It was absolutely delightful and spooky!', 'Kareena Kapoor Khan', 'Bollywood Actress · 6× Filmfare Award Winner', 1),
-('I''ve got goosebumps. I''ve no idea how you did that. You''re amazing.', 'Martin Garrix', 'Dutch DJ and Record Producer', 2),
-('Suhani''s personality shines throughout her thought provoking and entertaining show!', 'Marvin Berglas', 'Award-Winning Magician · Founder, Marvin''s Magic', 3),
-('I want to touch your feet and give salute to your art.', 'Anu Malik', 'National Award-Winning Musician', 4),
-('You have something very different in you, you inspire me.', 'Saina Nehwal', 'Former World No.1 Badminton Player · Olympic Medalist', 5);
-
 -- Site Settings
 INSERT INTO settings (key, value) VALUES
-('site_title', 'Suhani Shah – Mentalist & Magician'),
-('hero_tagline', 'Mind Reading · Illusion · Wonder'),
-('about_text', 'Suhani Shah is one of the biggest names in the magic industry with an experience of over 2 decades of performing over 5000 shows.'),
-('contact_email', 'contact@suhanishah.com'),
-('youtube_url', 'https://youtube.com/@icc'),
-('instagram_url', 'https://instagram.com/thesuhanishah')
-ON CONFLICT (key) DO NOTHING;
+('site_title', 'Team India – Indian Cricket'),
+('hero_tagline', 'One Nation. One Team. One Dream.'),
+('about_text', 'Celebrating the history, players, and unforgettable moments of Indian cricket.'),
+('contact_email', ''),
+('youtube_url', 'https://www.youtube.com/@BCCI'),
+('instagram_url', 'https://www.instagram.com/indiancricketteam/')
+ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value
+WHERE settings.value ILIKE '%Suhani%'
+  OR settings.value ILIKE '%mentalist%'
+  OR settings.value ILIKE '%magician%';
