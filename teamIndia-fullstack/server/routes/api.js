@@ -6,44 +6,44 @@ const db = require('../db/db');
 const defaultVideos = [
   {
     id: 1,
-    title: 'Cricket World Cup 1983 Final: India v West Indies | Match Highlights',
-    youtube_url: 'https://www.youtube.com/watch?v=kYQ8Q1dE31I',
-    thumbnail_url: 'https://img.youtube.com/vi/kYQ8Q1dE31I/maxresdefault.jpg',
+    title: 'ICC Men\'s T20 World Cup 2024 Final: India vs South Africa Triumph',
+    youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
     display_order: 1
   },
   {
     id: 2,
-    title: "ICC Men's T20 World Cup 2007 Final: India vs Pakistan Historic Highlights",
-    youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    title: 'Cricket World Cup 2011 Final: MS Dhoni 91* & The Winning Six | Match Highlights',
+    youtube_url: 'https://www.youtube.com/watch?v=XhBw0y6pY1A',
+    thumbnail_url: 'https://img.youtube.com/vi/XhBw0y6pY1A/maxresdefault.jpg',
     display_order: 2
   },
   {
     id: 3,
-    title: 'Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights',
-    youtube_url: 'https://www.youtube.com/watch?v=XhBw0y6pY1A',
-    thumbnail_url: 'https://img.youtube.com/vi/XhBw0y6pY1A/maxresdefault.jpg',
+    title: 'ICC Men\'s T20 World Cup 2007 Final: India vs Pakistan Historic Highlights',
+    youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
     display_order: 3
   },
   {
     id: 4,
-    title: '2013 Champions Trophy Finals: India vs England Thriller | Highlights',
+    title: 'Cricket World Cup 1983 Final: Kapil Dev\'s Historic Trophy Triumph at Lord\'s',
     youtube_url: 'https://www.youtube.com/watch?v=kYQ8Q1dE31I',
     thumbnail_url: 'https://img.youtube.com/vi/kYQ8Q1dE31I/maxresdefault.jpg',
     display_order: 4
   },
   {
     id: 5,
-    title: "India's Historic Triumph BGT | Border-Gavaskar Trophy Highlights",
+    title: 'India\'s Historic Triumph at Fortress Gabba | Border-Gavaskar Trophy Highlights',
     youtube_url: 'https://www.youtube.com/watch?v=XhBw0y6pY1A',
     thumbnail_url: 'https://img.youtube.com/vi/XhBw0y6pY1A/maxresdefault.jpg',
     display_order: 5
   },
   {
     id: 6,
-    title: "60 Overs of HELL ft ICT | Lord's Iconic Test Victory Highlights",
-    youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg',
+    title: '2013 Champions Trophy Final: India vs England Edge of the Seat Thriller',
+    youtube_url: 'https://www.youtube.com/watch?v=kYQ8Q1dE31I',
+    thumbnail_url: 'https://img.youtube.com/vi/kYQ8Q1dE31I/maxresdefault.jpg',
     display_order: 6
   }
 ];
