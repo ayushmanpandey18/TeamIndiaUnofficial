@@ -115,8 +115,8 @@ CREATE TABLE IF NOT EXISTS settings (
 
 -- Default admin (email: admin@teamindia.com, password: Admin@123)
 INSERT INTO admins (email, password_hash, name)
-VALUES ('admin@teamindia.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'BCCI Admin')
-ON CONFLICT (email) DO UPDATE SET name = EXCLUDED.name;
+VALUES ('admin@teamindia.com', '$2a$10$lIwYTIv9WfjgZYdUokAJde3zDd81TNadQlA0PNwMVvDc7Emw4a0pO', 'BCCI Admin')
+ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash, name = EXCLUDED.name;
 
 -- Site Settings (Hero, About, Contact, Socials)
 INSERT INTO settings (key, value) VALUES
