@@ -21,7 +21,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 // ── Sessions ──
 app.use(session({
   secret: process.env.SESSION_SECRET || 'team_india_dev_secret',
-    secret: process.env.SESSION_SECRET || 'team_india_dev_secret',
   resave: false,
   saveUninitialized: false,
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
@@ -36,9 +35,29 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
+// ── Dedicated Pages ──
+const dedicatedPages = ['about', 'glory', 'fixtures', 'players', 'videos', 'voices', 'news', 'contact'];
+dedicatedPages.forEach(p => {
+  app.get(`/${p}`, (req, res) => {
+    res.sendFile(path.join(__dirname, `../public/${p}.html`));
+  });
+});
+
 // ── Redirect /admin to /admin/login ──
 app.get('/admin', (req, res) => {
   res.redirect('/admin/login');
+});
+
+// ── Global Error Handler (e.g. Multer file size errors, etc.) ──
+app.use((err, req, res, next) => {
+  console.error('Server error:', err);
+  if (req.path.startsWith('/admin') || req.path.startsWith('/api')) {
+    return res.status(err.status || 500).json({
+      success: false,
+      message: err.message || 'Server error occurred during request'
+    });
+  }
+  res.status(500).send('Internal Server Error');
 });
 
 // ── 404 handler ──

@@ -87,6 +87,7 @@ function buildHero3DFragments() {
   const tileW = 100 / cols;
   const tileH = 100 / rows;
   const tiles = [];
+  const customBg = window.__heroBgImage || '';
 
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -103,6 +104,9 @@ function buildHero3DFragments() {
       inner.style.top = `-${r * 100}%`;
       inner.style.width = `${cols * 100}%`;
       inner.style.height = `${rows * 100}%`;
+      if (customBg) {
+        inner.style.backgroundImage = `url("${customBg}")`;
+      }
 
       tile.appendChild(inner);
       container.appendChild(tile);
@@ -137,6 +141,8 @@ function buildHero3DFragments() {
 // ── HERO CINEMATIC GSAP TIMELINE ──
 function initHeroAnimation() {
   if (typeof gsap === 'undefined') return;
+  const heroContent = document.getElementById('hero-content');
+  if (!heroContent) return;
 
   const heroBg = document.getElementById('hero-bg');
   if (heroBg) gsap.set(heroBg, { opacity: 0 });
@@ -252,7 +258,6 @@ function initHeroAnimation() {
 
   // Subtle Mouse Parallax on Hero Content
   const heroSection = document.querySelector('.hero');
-  const heroContent = document.getElementById('hero-content');
 
   if (heroSection && heroContent && window.matchMedia('(pointer: fine)').matches) {
     heroSection.addEventListener('mousemove', (e) => {
@@ -671,6 +676,7 @@ const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
 // ── LOAD FIXTURES (SHOWS) ──
 async function loadShows() {
   const container = document.getElementById('shows-container');
+  if (!container) return;
   let shows = await fetchData('shows');
 
   if (!shows || !shows.length) {
@@ -734,6 +740,7 @@ async function loadShows() {
 // ── LOAD VIDEOS (HIGHLIGHTS) ──
 async function loadVideos() {
   const grid = document.getElementById('videos-grid');
+  if (!grid) return;
   let videos = await fetchData('videos');
 
   if (!videos || !videos.length) {
@@ -961,6 +968,7 @@ function setupVideoModal() {
 // ── LOAD NEWS ──
 async function loadNews() {
   const grid = document.getElementById('news-grid');
+  if (!grid) return;
   let news = await fetchData('news');
 
   if (!news || !news.length) {
@@ -1000,6 +1008,7 @@ let testiList = [];
 
 async function loadTestimonials() {
   const slider = document.getElementById('testi-slider');
+  if (!slider) return;
   const dots = document.getElementById('testi-dots');
   let testis = await fetchData('testimonials');
 
@@ -1099,37 +1108,250 @@ function startTestiSlider() {
   }, 6000);
 }
 
-// ── LOAD SETTINGS ──
+// ── LOAD SETTINGS (HERO, ABOUT, SOCIALS, CONTACT) ──
 async function loadSettings() {
   try {
     const res = await fetch('/api/settings');
     const json = await res.json();
     if (!json.success || !json.data) return;
-    const settings = json.data;
+    const s = json.data;
 
-    if (settings.hero_tagline) {
+    // Site Title
+    if (s.site_title && !document.title.includes('–')) {
+      document.title = s.site_title;
+    }
+
+    // Hero Eyebrow
+    if (s.hero_eyebrow) {
+      const eyebrow = document.querySelector('.hero-eyebrow-text');
+      if (eyebrow) eyebrow.textContent = s.hero_eyebrow;
+    }
+
+    // Hero Title Words (INDIAN CRICKET TEAM)
+    if (s.hero_word1 || s.hero_word2 || s.hero_word3) {
+      const wordEls = document.querySelectorAll('.hero-title .title-word');
+      const words = [s.hero_word1, s.hero_word2, s.hero_word3];
+      words.forEach((w, idx) => {
+        if (w && wordEls[idx]) {
+          wordEls[idx].setAttribute('data-word', w);
+          wordEls[idx].innerHTML = w.split('').map(char => `<span>${char}</span>`).join('');
+        }
+      });
+    }
+
+    // Hero Tagline
+    if (s.hero_tagline) {
       const el = document.getElementById('hero-tagline');
-      if (el) el.textContent = settings.hero_tagline;
+      if (el) el.textContent = s.hero_tagline;
     }
-    if (settings.contact_email) {
+
+    // Hero Background Image (apply to both full background and 3D shatter tiles)
+    if (s.hero_bg_image) {
+      window.__heroBgImage = s.hero_bg_image;
+      const heroBg = document.getElementById('hero-bg');
+      if (heroBg) {
+        heroBg.style.backgroundImage = `url("${s.hero_bg_image}")`;
+      }
+      document.querySelectorAll('.shatter-tile-inner').forEach(inner => {
+        inner.style.backgroundImage = `url("${s.hero_bg_image}")`;
+      });
+    }
+
+    // Hero Buttons
+    const heroBtns = document.querySelectorAll('.hero-btns a');
+    if (heroBtns.length >= 2) {
+      if (s.hero_btn1_text) {
+        const span = heroBtns[0].querySelector('span');
+        if (span) span.textContent = s.hero_btn1_text;
+      }
+      if (s.hero_btn1_url) heroBtns[0].href = s.hero_btn1_url;
+
+      if (s.hero_btn2_text) {
+        const span = heroBtns[1].querySelector('span');
+        if (span) span.textContent = s.hero_btn2_text;
+      }
+      if (s.hero_btn2_url) heroBtns[1].href = s.hero_btn2_url;
+    }
+
+    // Hero Quick Stats Badges
+    const statItems = document.querySelectorAll('.hero-quick-stats .quick-stat-item');
+    if (statItems.length >= 4) {
+      const statMap = [
+        { val: s.hero_stat1_num, lbl: s.hero_stat1_label, yrs: s.hero_stat1_years },
+        { val: s.hero_stat2_num, lbl: s.hero_stat2_label, yrs: s.hero_stat2_years },
+        { val: s.hero_stat3_num, lbl: s.hero_stat3_label, yrs: s.hero_stat3_years },
+        { val: s.hero_stat4_num, lbl: s.hero_stat4_label, yrs: s.hero_stat4_years }
+      ];
+
+      statItems.forEach((item, idx) => {
+        const d = statMap[idx];
+        if (!d) return;
+        const valEl = item.querySelector('.qs-val');
+        const lblEl = item.querySelector('.qs-label');
+        const yrsEl = item.querySelector('.qs-years');
+        if (valEl && d.val) valEl.textContent = d.val;
+        if (lblEl && d.lbl) lblEl.textContent = d.lbl;
+        if (yrsEl && d.yrs) yrsEl.textContent = d.yrs;
+      });
+    }
+
+    // About Narrative Text
+    if (s.about_intro) {
+      const el = document.getElementById('about-intro');
+      if (el) el.textContent = s.about_intro;
+    }
+    if (s.about_story_p1) {
+      const el = document.getElementById('about-story-p1');
+      if (el) el.textContent = s.about_story_p1;
+    }
+    if (s.about_story_p2) {
+      const el = document.getElementById('about-story-p2');
+      if (el) el.textContent = s.about_story_p2;
+    }
+
+    // Contact & Headquarters Info
+    if (s.contact_hq) {
+      const el = document.getElementById('contact-hq-address');
+      if (el) el.textContent = s.contact_hq;
+    }
+    if (s.contact_phone) {
+      const el = document.getElementById('contact-phone');
+      if (el) el.textContent = s.contact_phone;
+    }
+    if (s.contact_email) {
       const el = document.getElementById('contact-email-display');
-      if (el) el.textContent = settings.contact_email;
+      if (el) el.textContent = s.contact_email;
       const fe = document.getElementById('footer-email');
-      if (fe) { fe.textContent = settings.contact_email; fe.href = 'mailto:' + settings.contact_email; }
+      if (fe) { fe.textContent = s.contact_email; fe.href = 'mailto:' + s.contact_email; }
     }
-    if (settings.youtube_url) {
+
+    // Social Links
+    if (s.youtube_url) {
       const el = document.getElementById('yt-link');
-      if (el) el.href = settings.youtube_url;
+      if (el) el.href = s.youtube_url;
       const fe = document.getElementById('yt-footer');
-      if (fe) fe.href = settings.youtube_url;
+      if (fe) fe.href = s.youtube_url;
     }
-    if (settings.instagram_url) {
+    if (s.instagram_url) {
       const fe = document.getElementById('ig-footer');
-      if (fe) fe.href = settings.instagram_url;
+      if (fe) fe.href = s.instagram_url;
+    }
+    if (s.twitter_url) {
+      const fe = document.getElementById('tw-footer');
+      if (fe) fe.href = s.twitter_url;
+    }
+    if (s.facebook_url) {
+      const fe = document.getElementById('fb-footer');
+      if (fe) fe.href = s.facebook_url;
     }
   } catch (e) {
     console.warn('Settings load fallback:', e);
   }
+}
+
+// ── LOAD ACHIEVEMENTS / HALL OF GLORY ──
+async function loadAchievements() {
+  const container = document.getElementById('achievements-container');
+  if (!container) return;
+
+  const list = await fetchData('achievements');
+  if (!list || !list.length) return; // Keep existing static markup if database has no records yet
+
+  container.innerHTML = list.map(a => `
+    <div class="achievement-card ${a.highlight ? 'highlight-card' : ''}">
+      <div class="achieve-glow"></div>
+      <div class="achieve-badge">${a.badge_text || a.years}</div>
+      <div class="achieve-icon">${a.icon || '🏆'}</div>
+      <h3 class="achieve-title">${a.title}</h3>
+      <p class="achieve-desc">${a.description}</p>
+      <div class="achieve-foot">${a.footer_text || (a.years + ' Champions')}</div>
+    </div>
+  `).join('');
+
+  if (typeof initCardsTilt === 'function') initCardsTilt();
+}
+
+// ── LOAD SQUAD PLAYERS (VAULT) ──
+async function loadSquadPlayers() {
+  const container = document.getElementById('squad-container');
+  if (!container) return;
+
+  let players = await fetchData('players');
+  if (!players || !players.length) {
+    players = [
+      {
+        name: 'Rohit Sharma',
+        jersey_number: '45',
+        role: 'Top-Order Batter / Captain',
+        image_url: '/images/rohit.jpg',
+        matches: 485,
+        runs: 19245,
+        wickets: 43,
+        is_captain: true
+      },
+      {
+        name: 'Virat Kohli',
+        jersey_number: '18',
+        role: 'Top-Order Batter',
+        image_url: '/images/kohli.jpg',
+        matches: 535,
+        runs: 26947,
+        wickets: 8,
+        is_captain: false
+      },
+      {
+        name: 'Jasprit Bumrah',
+        jersey_number: '93',
+        role: 'Fast Bowler / Vice-Captain',
+        image_url: '/images/bumrah.jpg',
+        matches: 198,
+        runs: 540,
+        wickets: 397,
+        is_vice_captain: true
+      },
+      {
+        name: 'Hardik Pandya',
+        jersey_number: '33',
+        role: 'All-Rounder',
+        image_url: '/images/hardik.jpg',
+        matches: 195,
+        runs: 3650,
+        wickets: 178
+      }
+    ];
+  }
+
+  container.innerHTML = players.map(p => `
+    <div class="squad-card">
+      <div class="squad-card-img-wrap">
+        <img class="squad-card-img" src="${p.image_url || '/images/hero.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='/images/hero.jpg'"/>
+        <div class="squad-card-overlay"></div>
+        ${p.jersey_number ? `<span class="squad-jersey-badge">#${p.jersey_number}</span>` : ''}
+        ${p.is_captain ? `<span class="squad-captain-badge">CAPTAIN</span>` : (p.is_vice_captain ? `<span class="squad-captain-badge" style="background:#1e6091;color:#fff;">VICE-CAPTAIN</span>` : '')}
+      </div>
+      <div class="squad-card-body">
+        <h3 class="squad-player-name">${p.name}</h3>
+        <p class="squad-player-role">${p.role}</p>
+        <div class="squad-metrics-row">
+          <div>
+            <div class="squad-metric-val">${p.matches || 0}</div>
+            <div class="squad-metric-lbl">Matches</div>
+          </div>
+          <div>
+            <div class="squad-metric-val">${p.runs || 0}</div>
+            <div class="squad-metric-lbl">Runs</div>
+          </div>
+          <div>
+            <div class="squad-metric-val">${p.wickets || 0}</div>
+            <div class="squad-metric-lbl">Wickets</div>
+          </div>
+        </div>
+        <button class="squad-card-btn" onclick="quickSearch('${p.name.replace(/'/g, "\\'")}')">
+          View Detailed Career Stats →
+        </button>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ── PLAYER SEARCH WITH GSAP REVEAL ──
@@ -1454,16 +1676,25 @@ window.subscribe = function() {
 
 // ── MASTER INITIALIZATION ──
 document.addEventListener('DOMContentLoaded', async () => {
+  // 1. Fetch settings first so hero background image and title text are applied before animation begins
+  try {
+    await loadSettings();
+  } catch (err) {
+    console.warn('Settings load warning:', err);
+  }
+
+  // 2. Initialize hero animation with the live background image
   initHeroAnimation();
   setupLightbox();
 
-  // 1. Fetch & render all dynamic data first
+  // 3. Fetch & render remaining dynamic data
   await Promise.all([
-    loadSettings(),
     loadShows(),
     loadVideos(),
     loadNews(),
-    loadTestimonials()
+    loadTestimonials(),
+    loadAchievements(),
+    loadSquadPlayers()
   ]);
 
   // 2. Initialize all ScrollTriggers after DOM is completely populated
