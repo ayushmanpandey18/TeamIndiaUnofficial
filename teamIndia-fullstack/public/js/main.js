@@ -746,19 +746,34 @@ async function loadVideos() {
   if (!videos || !videos.length) {
     videos = [
       {
-        title: 'India Wins 2024 ICC T20 World Cup! Unforgettable Final vs South Africa',
-        youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        thumbnail_url: '/images/uploads/Design1.png'
+        title: 'Cricket World Cup 1983 Final: India v West Indies | Match Highlights',
+        youtube_url: 'https://www.youtube.com/watch?v=kYQ8Q1dE31I',
+        thumbnail_url: 'https://img.youtube.com/vi/kYQ8Q1dE31I/maxresdefault.jpg'
       },
       {
-        title: 'MS Dhoni 91* & The Winning Six – 2011 World Cup Final Highlights',
+        title: "ICC Men's T20 World Cup 2007 Final: India vs Pakistan Historic Highlights",
         youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        thumbnail_url: '/images/2011.jpeg'
+        thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg'
       },
       {
-        title: 'Kapil Dev 175* & Historic 1983 World Cup Trophy Triumph at Lord\'s',
+        title: 'Cricket World Cup 2011 Final: India v Sri Lanka | Match Highlights',
+        youtube_url: 'https://www.youtube.com/watch?v=XhBw0y6pY1A',
+        thumbnail_url: 'https://img.youtube.com/vi/XhBw0y6pY1A/maxresdefault.jpg'
+      },
+      {
+        title: '2013 Champions Trophy Finals: India vs England Thriller | Highlights',
+        youtube_url: 'https://www.youtube.com/watch?v=kYQ8Q1dE31I',
+        thumbnail_url: 'https://img.youtube.com/vi/kYQ8Q1dE31I/maxresdefault.jpg'
+      },
+      {
+        title: "India's Historic Triumph BGT | Border-Gavaskar Trophy Highlights",
+        youtube_url: 'https://www.youtube.com/watch?v=XhBw0y6pY1A',
+        thumbnail_url: 'https://img.youtube.com/vi/XhBw0y6pY1A/maxresdefault.jpg'
+      },
+      {
+        title: "60 Overs of HELL ft ICT | Lord's Iconic Test Victory Highlights",
         youtube_url: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-        thumbnail_url: '/images/kd83.jpg'
+        thumbnail_url: 'https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg'
       }
     ];
   }
