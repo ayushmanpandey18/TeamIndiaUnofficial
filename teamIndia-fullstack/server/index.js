@@ -67,21 +67,26 @@ app.use((req, res) => {
 
 const pool = require('./db/db');
 
-// ── Start server ──
-app.listen(PORT, async () => {
-  try {
-    const schemaSql = fs.readFileSync(path.join(__dirname, 'db/schema.sql'), 'utf8');
-    await pool.query(schemaSql);
-    console.log('✅ Database schema and seed data initialized successfully');
-  } catch (err) {
-    console.error('⚠️ Schema init warning:', err.message);
-  }
+// ── Start server (locally or in traditional hosting) ──
+if (process.env.VERCEL !== '1' && !process.env.NOW_REGION) {
+  app.listen(PORT, async () => {
+    try {
+      const schemaSql = fs.readFileSync(path.join(__dirname, 'db/schema.sql'), 'utf8');
+      await pool.query(schemaSql);
+      console.log('✅ Database schema and seed data initialized successfully');
+    } catch (err) {
+      console.error('⚠️ Schema init warning:', err.message);
+    }
 
-  console.log(`
-  ╔════════════════════════════════════╗
-  ║   🎩 Team India Website Running   ║
-  ║   Frontend: http://localhost:${PORT}  ║
-  ║   Admin:    http://localhost:${PORT}/admin ║
-  ╚════════════════════════════════════╝
-  `);
-});
+    console.log(`
+    ╔════════════════════════════════════╗
+    ║   🎩 Team India Website Running   ║
+    ║   Frontend: http://localhost:${PORT}  ║
+    ║   Admin:    http://localhost:${PORT}/admin ║
+    ╚════════════════════════════════════╝
+    `);
+  });
+}
+
+// Export for serverless platforms (e.g. Vercel)
+module.exports = app;

@@ -1,1 +1,15 @@
-{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "teamIndia-fullstack/server/index.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "teamIndia-fullstack/server/index.js"
+    }
+  ]
+}
