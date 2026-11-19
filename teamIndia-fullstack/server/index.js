@@ -26,6 +26,27 @@ app.use(session({
   cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // 24 hours
 }));
 
+const pool = require('./db/db');
+
+// ── Cloud Database Auto-Initializer ──
+let cloudSchemaChecked = false;
+app.use(async (req, res, next) => {
+  if (!cloudSchemaChecked && (process.env.DATABASE_URL || process.env.POSTGRES_URL)) {
+    try {
+      const check = await pool.query("SELECT to_regclass('public.admins') AS exists;");
+      if (!check.rows[0]?.exists) {
+        const schemaSql = fs.readFileSync(path.join(__dirname, 'db/schema.sql'), 'utf8');
+        await pool.query(schemaSql);
+        console.log('✅ Cloud DB Schema Initialized on Vercel');
+      }
+      cloudSchemaChecked = true;
+    } catch (e) {
+      console.warn('Cloud DB init check:', e.message);
+    }
+  }
+  next();
+});
+
 // ── Routes ──
 app.use('/api', require('./routes/api'));
 app.use('/admin', require('./routes/admin'));
@@ -64,8 +85,6 @@ app.use((err, req, res, next) => {
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '../public/index.html'));
 });
-
-const pool = require('./db/db');
 
 // ── Start server (locally or in traditional hosting) ──
 if (process.env.VERCEL !== '1' && !process.env.NOW_REGION) {

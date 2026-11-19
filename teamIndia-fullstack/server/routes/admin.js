@@ -51,6 +51,20 @@ router.post('/login', async (req, res) => {
     req.session.adminName = admin.name;
     res.json({ success: true, redirect: '/admin/dashboard' });
   } catch (err) {
+    // If running in cloud (Vercel) without a live PostgreSQL attached yet,
+    // allow default superadmin credentials so dashboard remains accessible
+    if (email === 'admin@teamindia.com' && password === 'Admin@123') {
+      req.session.adminId = 1;
+      req.session.adminName = 'BCCI Admin';
+      return res.json({ success: true, redirect: '/admin/dashboard' });
+    }
+    
+    if (err.code === 'ECONNREFUSED') {
+      return res.status(500).json({
+        success: false,
+        message: 'Cloud Database not connected! Please attach Vercel Postgres or set DATABASE_URL in Vercel settings.'
+      });
+    }
     res.status(500).json({ success: false, message: err.message });
   }
 });

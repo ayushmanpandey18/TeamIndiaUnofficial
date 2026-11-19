@@ -1,10 +1,15 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
+const connectionString = process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
+  process.env.POSTGRES_PRISMA_URL ||
+  process.env.POSTGRES_URL_NON_POOLING;
+
 const pool = new Pool(
-  process.env.DATABASE_URL
+  connectionString
     ? {
-        connectionString: process.env.DATABASE_URL,
+        connectionString,
         ssl: { rejectUnauthorized: false }
       }
     : {
